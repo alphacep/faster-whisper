@@ -634,7 +634,8 @@ class BatchedInferencePipeline(Pipeline):
         to_cpu = (
             self.model.model.device == "cuda" and len(self.model.model.device_index) > 1
         )
-        segment = self.model.feature_extractor(audio, padding=True, to_cpu=to_cpu)[
+        # Don't take too much audio
+        segment = self.model.feature_extractor(audio[:30 * 16000], padding=True, to_cpu=to_cpu)[
             :, : self.model.feature_extractor.nb_max_frames
         ]
         encoder_output = self.model.encode(segment)
